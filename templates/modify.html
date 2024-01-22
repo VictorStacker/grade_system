@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>修改考级资料</title>
+    <meta charset="UTF-8">
+    <!-- 引用本地的Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+    <style>
+        body {
+            padding-top: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .table {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2>修改考级资料</h2>
+            <nav>
+                <a href="{{ url_for('index') }}">首页</a> |
+                <a href="{{ url_for('add_candidate') }}">录入考生信息</a> |
+                <a href="{{ url_for('add_exam_result') }}">录入考试成绩</a> |
+                <a href="{{ url_for('search') }}">查询考级资料</a>
+            </nav>
+        </div>
+        <hr>
+
+        <!-- 显示考生信息和考试结果的表格 -->
+        <h3>考生信息：</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>身份证号</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidate in candidates %}
+                    <tr>
+                        <td>{{ candidate.name }}</td>
+                        <td>{{ candidate.id_number }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_candidate', id=candidate.id) }}" class="btn btn-primary btn-sm">编辑</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>考试结果：</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>身份证号</th>
+                    <th>考试级别</th>
+                    <th>考试日期</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in exam_results %}
+                    <tr>
+                        <td>{{ result.name }}</td>
+                        <td>{{ result.id_number }}</td>
+                        <td>{{ result.exam_level }}</td>
+                        <td>{{ result.exam_date }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_exam_result', id=result.id) }}" class="btn btn-primary btn-sm">编辑</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- 可选: Bootstrap JavaScript -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>考级资料库首页</title>
+    <meta charset="UTF-8">
+
+    <!-- 引用本地的Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+    <style>
+        body {
+            text-align: center; /* 使内容居中 */
+        }
+        .header {
+            margin-top: 20px; /* 为标题添加上边距 */
+        }
+        .navigation {
+            margin-top: 40px; /* 标题和导航按钮之间的距离 */
+        }
+        .navigation a {
+            display: block; /* 每个链接占据一整行 */
+            margin: 10px auto; /* 上下间隔10px，左右居中 */
+            width: 200px; /* 设置链接宽度 */
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>考级资料库</h2>
+    </div>
+
+    <div class="container">
+        <div class="navigation">
+            <a href="{{ url_for('add_candidate') }}" class="btn btn-primary">录入考级资料</a>
+            <a href="{{ url_for('add_exam_result') }}" class="btn btn-secondary">录入考试成绩</a>
+            <a href="{{ url_for('search') }}" class="btn btn-success">查询考级资料</a>
+            <a href="{{ url_for('modify') }}" class="btn btn-info">修改考级资料</a>
+        </div>
+    </div>
+
+    <!-- 可选: Bootstrap JavaScript -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+</body>
+</html>

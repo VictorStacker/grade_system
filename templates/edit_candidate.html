@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>编辑考生信息</title>
+    <meta charset="UTF-8">
+    <!-- 引用本地的Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+    <style>
+        body {
+            padding-top: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .form-group {
+            text-align: left;
+        }
+        .form-control {
+            margin-bottom: 10px;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2>编辑考生信息</h2>
+            <nav>
+                <a href="{{ url_for('index') }}">首页</a> |
+                <a href="{{ url_for('modify') }}">修改考级资料</a>
+            </nav>
+        </div>
+        <hr>
+
+        <form action="{{ url_for('edit_candidate', id=candidate.id) }}" method="post">
+            <div class="form-group">
+                <label for="name">姓名:</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ candidate.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="id_number">身份证号:</label>
+                <input type="text" class="form-control" id="id_number" name="id_number" value="{{ candidate.id_number }}" required>
+            </div>
+            <div class="form-group">
+                <label for="birthday">生日:</label>
+                <input type="date" class="form-control" id="birthday" name="birthday" value="{{ candidate.birthday }}">
+            </div>
+            <button type="submit" class="btn btn-primary">更新</button>
+        </form>
+    </div>
+
+    <!-- 可选: Bootstrap JavaScript -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+</body>
+</html>

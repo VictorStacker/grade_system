@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>录入考试结果</title>
+    <meta charset="UTF-8">
+    <!-- 引用本地的Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+    <style>
+        body {
+            padding-top: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .form-group {
+            text-align: left;
+        }
+        .form-control {
+            margin-bottom: 10px;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2>录入考试结果</h2>
+            <nav>
+                <a href="{{ url_for('index') }}">首页</a> |
+                <a href="{{ url_for('add_candidate') }}">录入考生信息</a> |
+                <a href="{{ url_for('search') }}">查询考级资料</a> |
+                <a href="{{ url_for('modify') }}">修改考级资料</a>
+            </nav>
+        </div>
+        <hr>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <!-- 录入考试结果的表单 -->
+        <form action="{{ url_for('add_exam_result') }}" method="post">
+            <div class="form-group">
+                <label for="id_number">考生身份证号:</label>
+                <input type="text" class="form-control" id="id_number" name="id_number" required>
+            </div>
+            <div class="form-group">
+                <label for="name">姓名:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="exam_level">考试级别(等级):</label>
+                <select class="form-control" id="exam_level" name="exam_level">
+                    {% for i in range(1, 11) %}
+                    <option value="{{ i }}">{{ i }}级</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exam_date">考试日期:</label>
+                <input type="date" class="form-control" id="exam_date" name="exam_date" required>
+            </div>
+            <div class="form-group">
+                <label for="exam_location">考试地点:</label>
+                <input type="text" class="form-control" id="exam_location" name="exam_location" required>
+            </div>
+            <div class="form-group">
+                <label for="passed">是否通过:</label>
+                <select class="form-control" id="passed" name="passed">
+                    <option value="True">通过</option>
+                    <option value="False">未通过</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">提交</button>
+        </form>
+    </div>
+
+    <!-- 可选: Bootstrap JavaScript -->
+    <script src="{{ url_for('static', filename='jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#id_number').on('change', function() {
+                var idNumber = $(this).val();
+                if(idNumber) {
+                    $.ajax({
+                        url: '/get_candidate_info/' + idNumber,
+                        type: 'GET',
+                        success: function(data) {
+                            $('#name').val(data.name);
+                            $('#exam_level').val(data.exam_level);
+                            $('#exam_date').val(data.exam_date);
+                            $('#exam_location').val(data.exam_location);
+                                                },
+                        error: function() {
+                            alert('无法获取考生信息');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

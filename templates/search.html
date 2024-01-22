@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>查询考级资料</title>
+    <meta charset="UTF-8">
+    <!-- 引用本地的Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+    <style>
+        body {
+            padding-top: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .search-form {
+            margin-bottom: 20px;
+        }
+        .table {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2>查询考级资料</h2>
+            <nav>
+                <a href="{{ url_for('index') }}">首页</a> |
+                <a href="{{ url_for('add_candidate') }}">录入考生信息</a> |
+                <a href="{{ url_for('add_exam_result') }}">录入考试成绩</a> |
+                <a href="{{ url_for('modify') }}">修改考级资料</a>
+            </nav>
+        </div>
+        <hr>
+
+        <!-- 搜索表单 -->
+        <div class="search-form">
+            <form action="{{ url_for('search') }}" method="get" class="form-inline justify-content-center">
+                <input type="text" class="form-control mr-sm-2" name="search_query" placeholder="姓名或身份证号" required>
+                <button type="submit" class="btn btn-primary">搜索</button>
+            </form>
+        </div>
+
+        <!-- 显示搜索结果 -->
+        {% if results %}
+            <h3>搜索结果：</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>姓名</th>
+                        <th>身份证号</th>
+                        <th>考试级别</th>
+                        <th>考试日期</th>
+                        <th>考试地点</th>
+                        <th>是否通过</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in results %}
+                        <tr>
+                            <td>{{ record.name }}</td>
+                            <td>{{ record.id_number }}</td>
+                            <td>{{ record.exam_level }}</td>
+                            <td>{{ record.exam_date }}</td>
+                            <td>{{ record.exam_location }}</td>
+                            <td>{{ '通过' if record.passed else '未通过' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>未找到匹配的结果。</p>
+        {% endif %}
+
+    </div>
+
+    <!-- 可选: Bootstrap JavaScript -->
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+</body>
+</html>

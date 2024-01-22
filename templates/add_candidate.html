@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>录入考生信息</title>
+    <meta charset="UTF-8">
+    <!-- 引用本地的Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+
+    <style>
+        body {
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-control {
+            margin-bottom: 10px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+
+        .file-upload-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px; /* 调整这个值以满足您的需求 */
+            height: 400px; /* 或您希望的高度 */
+
+        }
+
+        .form-group2 {
+            margin-top: 20px;
+            text-align: center; /* 确保文本和按钮居中 */
+        }
+
+        .submit-button {
+            margin-bottom: 40px; /* 调整这个值以满足您的需求 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>录入考生信息</h2>
+        <nav>
+            <a href="{{ url_for('index') }}">首页</a> |
+            <a href="{{ url_for('add_exam_result') }}">录入考级结果</a> |
+            <a href="{{ url_for('search') }}">查询考级资料</a> |
+            <a href="{{ url_for('modify') }}">修改考级资料</a>
+        </nav>
+    </div>
+    <hr>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- 录入考生信息的表单 -->
+    <form action="{{ url_for('add_candidate') }}" method="post">
+        <div class="form-group">
+            <label for="registration_level">报名级别:</label>
+            <select class="form-control" id="registration_level" name="registration_level">
+                {% for i in range(1, 11) %}
+                    <option value="{{ i }}">{{ i }}级</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="name">姓名:</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="gender">性别:</label>
+            <select class="form-control" id="gender" name="gender">
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="id_type">证件类型:</label>
+            <select class="form-control" id="id_type" name="id_type">
+                <option value="居民身份证">居民身份证</option>
+                <option value="护照">护照</option>
+                <option value="港澳居民来往内地通行证">港澳居民来往内地通行证</option>
+                <option value="台湾居民来往大陆通行证">台湾居民来往大陆通行证</option>
+                <option value="港澳居民居住证">港澳居民居住证</option>
+                <option value="台湾居民居住证">台湾居民居住证</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="id_number">证件号码:</label>
+            <input type="text" class="form-control" id="id_number" name="id_number" required>
+        </div>
+        <div class="form-group">
+            <label for="pinyin">姓名拼音:</label>
+            <input type="text" class="form-control" id="pinyin" name="pinyin">
+        </div>
+        <div class="form-group">
+            <label for="birthday">出生日期:</label>
+            <input type="date" class="form-control" id="birthday" name="birthday">
+        </div>
+        <div class="form-group">
+            <label for="institution">学习机构/学校:</label>
+            <input type="text" class="form-control" id="institution" name="institution">
+        </div><div class="form-group">
+            <label for="institution">指导老师:</label>
+            <input type="text" class="form-control" id="teacker" name="teacker">
+        </div>
+        <!-- 报名信息 -->
+
+        <button type="submit" class="btn btn-primary submit-button">提交</button>
+    </form>
+    <form action="{{ url_for('upload_candidate_info') }}" method="post" enctype="multipart/form-data">
+        <div class="file-upload-container">
+            <div class="form-group2">
+                <h3>批量上传考生信息</h3>
+                <p>上传 Excel 文件以批量录入考生信息。</p>
+                <input type="file" name="file" accept=".xlsx"><br>
+                <button type="submit" class="btn btn-secondary submit-button">上传文件</button>
+            </div>
+        </div>
+
+
+        <!-- 提供模板下载链接 -->
+        <div class="form-group2">
+            <a href="{{ url_for('static', filename='exam_template.xlsx') }}" download>下载考生信息录入模板</a>
+        </div>
+
+</form>
+</div>
+
+
+<!-- 可选: Bootstrap JavaScript -->
+
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+<script>
+    function validateIDNumber() {
+        var idType = $('#id_type').val();
+        var idNumber = $('#id_number').val();
+
+        if (idType === '居民身份证' || idType === '港澳居民居住证' || idType === '台湾居民居住证') {
+            var regex = /^[1-9]\d{5}(18|19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/;
+            if (!regex.test(idNumber)) {
+                alert('请输入有效的证件号码');
+                $('#id_number').val('');
+            }
+        }
+    }
+
+    // 验证级别资格
+    function validateLevel() {
+        var idNumber = $('#id_number').val();
+        var registrationLevel = $('#registration_level').val();
+
+        // 发起 AJAX 请求检查用户是否具备报名资格
+        $.ajax({
+            url: '/check_level_qualification/' + idNumber + '/' + registrationLevel,
+            type: 'GET',
+            success: function (response) {
+                if (!response.qualified) {
+                    alert(response.message);
+                    return false;
+                }
+            },
+            error: function () {
+                alert('无法验证考级资格');
+                return false;
+            }
+        });
+    }
+
+    // 在表单提交前进行验证
+    $('form').on('submit', function (e) {
+        if (!validateIDNumber() || !validateLevel()) {
+            e.preventDefault(); // 阻止表单提交
+        }
+    });
+</script>
+
+</body>
+</html>
