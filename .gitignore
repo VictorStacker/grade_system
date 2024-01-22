@@ -1,3 +1,5 @@
 /instance/exam_data.db
 /static/bootstrap-5.3.2.zip
 /static/bootstrap-5.3.2
+/__pycache__
+/.vscode
